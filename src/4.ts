@@ -16,46 +16,43 @@ interface IKey {
 }
 
 interface IPerson {
-  getKey(): number;
+  getKey(): object;
 }
 
 class Key implements IKey {
-  private signature: number;
-  constructor() {
-    this.signature = Math.round(Math.random() * (100000 - 10000) + 10000);
-  }
-  public getSignature() {
+  private signature: number = Math.round(
+    Math.random() * (100000 - 10000) + 10000
+  );
+
+  public getSignature(): number {
     return this.signature;
   }
 }
 
 class Person implements IPerson {
   constructor(private key: Key) {}
-  public getKey() {
-    return this.key.getSignature();
+  public getKey(): Key {
+    return this.key;
   }
 }
 
 abstract class House {
-  public door = false;
+  public door: boolean = false;
   public tenants: Person[] = [];
   constructor(public key: Key) {}
 
-  public comeIn(person: Person) {
+  public comeIn(person: Person): void {
     if (this.door) {
       this.tenants.push(person);
     }
   }
 
-  public abstract openDoor(key: number): void;
+  public abstract openDoor(key: Key): void;
 }
 
 class MyHouse extends House {
-  constructor(key: Key) {
-    super(key);
-  }
-  public openDoor(inputKey: number) {
-    if (this.key.getSignature() === inputKey) {
+  public openDoor(inputKey: Key): void {
+    if (this.key.getSignature() === inputKey.getSignature()) {
       this.door = true;
     }
   }
